@@ -18,7 +18,7 @@ To get this project up and running on your local machine, follow these steps:
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/Aghaulor-Gift/AI-Document-Summarization-Metadata-Extraction-Workflow.git
+    git clone https://github.com/github_name/AI-Document-Summarization-Metadata-Extraction-Workflow.git
     cd AI-Document-Summarization-Metadata-Extraction-Workflow
     ```
 
