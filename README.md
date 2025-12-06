@@ -1,98 +1,164 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# AI Document Summarizer API 🧠
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+This project is an AI-powered document summarization and metadata extraction service built with NestJS and TypeScript. It allows users to upload various document types (PDF, DOCX, TXT) and leverages OpenAI's GPT models to generate concise summaries and extract key information like title, keywords, language, domain, and sentiment.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+- **Document Processing**: Efficiently extracts text from PDF, DOCX, and TXT files.
+- **AI Summarization**: Integrates with OpenAI to provide AI-generated summaries of uploaded documents.
+- **Metadata Extraction**: Automatically identifies and extracts crucial metadata such as document title, keywords, language, domain, and sentiment.
+- **Robust API**: Built with NestJS, offering a scalable and maintainable backend architecture.
+- **File Validation**: Includes comprehensive validation for file types and sizes to ensure secure and efficient processing.
+- **Swagger Documentation**: Automatically generated API documentation for easy interaction and understanding.
 
-## Description
+## Getting Started
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Installation
+To get this project up and running on your local machine, follow these steps:
 
-## Project setup
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/Aghaulor-Gift/AI-Document-Summarization-Metadata-Extraction-Workflow.git
+    cd AI-Document-Summarization-Metadata-Extraction-Workflow
+    ```
+
+2.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+
+### Environment Variables
+Before running the application, you need to configure the following environment variable:
+
+-   `OPENAI_API_KEY`: Your API key for accessing OpenAI services.
+
+    **Example:**
+    ```
+    OPENAI_API_KEY=sk-your_openai_api_key_here
+    ```
+    Create a `.env` file in the root directory of the project and add this variable.
+
+### Running the Application
+
+1.  **Start in Development Mode**:
+    ```bash
+    npm run start:dev
+    ```
+    The application will run in watch mode, restarting on code changes.
+
+2.  **Start in Production Mode**:
+    ```bash
+    npm run start:prod
+    ```
+
+The API will be accessible at `http://localhost:3000/api`.
+The interactive API documentation (Swagger UI) will be available at `http://localhost:3000/api/docs`.
+
+## Usage
+Once the server is running, you can interact with the API to summarize documents.
+
+To summarize a document:
+1.  **Open Swagger UI**: Navigate to `http://localhost:3000/api/docs` in your browser.
+2.  **Locate the `POST /documents/summarize` endpoint**: Expand it.
+3.  **Try it out**: Click the "Try it out" button.
+4.  **Upload File**: Select a PDF, DOCX, or TXT file from your local machine.
+5.  **Optional Parameters**: Provide `desiredLength` (e.g., 'short', 'medium', 'long') and `maxKeywords` (a number between 1 and 10) if you wish to customize the summary.
+6.  **Execute**: Click "Execute" to send the request.
+
+The API will respond with a JSON object containing the summary and extracted metadata.
+
+Alternatively, you can use a tool like `curl` or Postman to send a `multipart/form-data` request:
 
 ```bash
-$ pnpm install
+curl -X POST "http://localhost:3000/api/documents/summarize" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/your/document.pdf;type=application/pdf" \
+  -F "desiredLength=medium" \
+  -F "maxKeywords=5"
 ```
 
-## Compile and run the project
+## API Documentation
 
-```bash
-# development
-$ pnpm run start
+### Base URL
+`http://localhost:3000/api`
 
-# watch mode
-$ pnpm run start:dev
+### Endpoints
 
-# production mode
-$ pnpm run start:prod
+#### POST /documents/summarize
+This endpoint allows you to upload a document (PDF, DOCX, or TXT) to generate an AI-powered summary and extract relevant metadata.
+
+**Request**:
+`Content-Type: multipart/form-data`
+
+| Field          | Type           | Description                                                                     | Required | Example                                    |
+| :------------- | :------------- | :------------------------------------------------------------------------------ | :------- | :----------------------------------------- |
+| `file`         | `binary`       | The document file (PDF, DOCX, or TXT) to be summarized. Max size: 10MB.         | `true`   | `(binary file data)`                       |
+| `desiredLength`| `string`       | Optional. The desired length of the summary.                                    | `false`  | `"short"`, `"medium"`, `"long"`            |
+| `maxKeywords`  | `number`       | Optional. The maximum number of keywords to extract (between 1 and 10).         | `false`  | `5`                                        |
+
+**Response**:
+`Content-Type: application/json`
+```json
+{
+  "summary": "This is a concise summary of the uploaded document, highlighting its main points and key takeaways.",
+  "title": "Document Title Example",
+  "keywords": ["AI", "Summarization", "NestJS", "OpenAI", "Documents"],
+  "language": "en",
+  "domain": "Technology",
+  "sentiment": "neutral"
+}
 ```
 
-## Run tests
+**Errors**:
+-   `400 Bad Request`:
+    -   `Unsupported file type. Only PDF, DOCX, or TXT are allowed.`
+    -   `File is required`
+-   `500 Internal Server Error`:
+    -   `Missing OPENAI_API_KEY — AI engine cannot run.`
+    -   `Failed to extract text: [error_message]` (e.g., `PDF is corrupt or unreadable.`)
+    -   `The uploaded document contains no readable or valid text.`
+    -   `AI summarization request failed. Try again later.`
+    -   `AI returned an empty or invalid response.`
+    -   `AI returned malformed JSON. Try a shorter or clearer document.`
+    -   `AI response missing required field: [field_name]` (e.g., `AI response missing required field: title`)
 
-```bash
-# unit tests
-$ pnpm run test
+## Technologies Used
 
-# e2e tests
-$ pnpm run test:e2e
+| Technology | Category         | Description                                                          | Link                                                       |
+| :--------- | :--------------- | :------------------------------------------------------------------- | :--------------------------------------------------------- |
+| **NestJS** | Backend Framework| A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.| [https://nestjs.com/](https://nestjs.com/)                 |
+| **TypeScript**| Language         | A strongly typed superset of JavaScript that compiles to plain JavaScript. | [https://www.typescriptlang.org/](https://www.typescriptlang.org/) |
+| **Node.js**| Runtime          | A JavaScript runtime built on Chrome's V8 JavaScript engine.         | [https://nodejs.org/](https://nodejs.org/)                 |
+| **OpenAI API**| AI Integration   | Provides access to advanced AI models for tasks like summarization and text generation. | [https://openai.com/](https://openai.com/)                 |
+| **Multer** | File Upload      | Middleware for handling `multipart/form-data`, primarily used for uploading files. | [https://github.com/expressjs/multer](https://github.com/expressjs/multer) |
+| **pdf-parse**| PDF Parsing      | A utility to extract text from PDF files.                            | [https://www.npmjs.com/package/pdf-parse](https://www.npmjs.com/package/pdf-parse) |
+| **Swagger**| API Documentation| Tools for designing, building, documenting, and consuming REST APIs. | [https://swagger.io/](https://swagger.io/)                 |
+| **ESLint** | Linter           | Pluggable JavaScript linter that helps ensure consistent code style and identify errors. | [https://eslint.org/](https://eslint.org/)                 |
+| **Prettier**| Code Formatter   | An opinionated code formatter that enforces a consistent style.      | [https://prettier.io/](https://prettier.io/)               |
+| **Jest**   | Testing Framework| A delightful JavaScript testing framework with a focus on simplicity. | [https://jestjs.io/](https://jestjs.io/)                   |
 
-# test coverage
-$ pnpm run test:cov
-```
+## Contributing
+Contributions are welcome! If you have suggestions for improvements or new features, please follow these steps:
 
-## Deployment
+✨ Fork the repository.
+🛠️ Create a new branch for your feature or bug fix.
+💡 Implement your changes and write tests if applicable.
+✅ Ensure all tests pass and lint checks are clear.
+⬆️ Commit your changes with a descriptive message.
+🚀 Open a pull request against the `main` branch.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Please make sure your code adheres to the project's coding standards.
 
 ## License
+This project is currently UNLICENSED, as specified in the `package.json` file. Feel free to use and modify it for personal or educational purposes.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Author Info
+**Your Name**
+*   LinkedIn: [Your LinkedIn Profile](https://linkedin.com/in/your_username)
+*   Twitter: [@your_twitter_handle](https://twitter.com/your_twitter_handle)
+*   Portfolio: [Your Portfolio Link](https://your-portfolio.com)
+
+---
+
+[![Readme was generated by Dokugen](https://img.shields.io/badge/Readme%20was%20generated%20by-Dokugen-brightgreen)](https://www.npmjs.com/package/dokugen)
