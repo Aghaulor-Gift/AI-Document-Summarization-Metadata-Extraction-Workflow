@@ -1,20 +1,23 @@
 import {
   Controller,
   Post,
+  Get,
+  Param,
   UseInterceptors,
   UploadedFile,
   Body,
   BadRequestException,
+  HttpCode,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
-import { SummarizeOptionsDto } from './dto/summarize-options.dto';
 import {
   ApiTags,
   ApiOperation,
   ApiConsumes,
   ApiBody,
   ApiResponse,
+  ApiParam,
 } from '@nestjs/swagger';
 
 @ApiTags('Documents')
@@ -22,34 +25,44 @@ import {
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
-  @Post('summarize')
-  @ApiOperation({ summary: 'Upload a document to generate AI summary and metadata' })
+  @Post('upload')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Upload a PDF or DOCX document' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
         file: { type: 'string', format: 'binary' },
-        desiredLength: { type: 'string', enum: ['short', 'medium', 'long'] },
-        maxKeywords: { type: 'number' },
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Summary generated successfully' })
-  @UseInterceptors(FileInterceptor('file'))
-  async summarize(
-    @UploadedFile() file: any,            // <-- IMPORTANT, THIS FIXES YOUR ERROR
-    @Body() options: SummarizeOptionsDto, // <-- Must end with a closing parenthesis below
-  ) {
+  @ApiResponse({ status: 200, description: 'Document uploaded and stored' })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    }),
+  )
+  async upload(@UploadedFile() file: any) {
     if (!file) {
       throw new BadRequestException('File is required');
     }
 
-    return this.documentService.summarizeAndExtract(
-      file.buffer,
-      file.originalname,
-      file.mimetype,
-      options,
-    );
+    return this.documentService.uploadDocument(file);
+  }
+
+  @Post(':id/analyze')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Analyze a previously uploaded document with LLM' })
+  @ApiParam({ name: 'id', type: 'string' })
+  async analyze(@Param('id') id: string) {
+    return this.documentService.analyzeDocument(id);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get stored document info, text, summary, and metadata' })
+  @ApiParam({ name: 'id', type: 'string' })
+  async getOne(@Param('id') id: string) {
+    return this.documentService.getDocument(id);
   }
 }

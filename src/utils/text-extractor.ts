@@ -8,25 +8,23 @@ export async function extractTextFromBuffer(
 ): Promise<string> {
   const ext = extname(originalName).toLowerCase();
 
-  // PDF HANDLING
   if (ext === '.pdf') {
     try {
       const data = await pdfParse(buffer);
       return data.text || '';
-    } catch (error) {
+    } catch {
       throw new Error('PDF is corrupt or unreadable.');
     }
   }
 
-  // DOCX HANDLING — simplified fallback
   if (ext === '.docx') {
-    return 'DOCX content extraction placeholder (extend if needed).';
+    // TODO: implement real DOCX parsing using e.g. 'mammoth' or 'docx-parser'
+    return 'DOCX extraction placeholder — implement with a proper library for full support.';
   }
 
-  // TXT HANDLING
   if (ext === '.txt') {
     return buffer.toString('utf-8');
   }
 
-  throw new Error(`Unsupported file extension: ${ext}`);
+  throw new Error(`Unsupported file type: ${ext}`);
 }

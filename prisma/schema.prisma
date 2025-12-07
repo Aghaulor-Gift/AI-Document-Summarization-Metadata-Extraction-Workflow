@@ -1,0 +1,26 @@
+generator client {
+  provider      = "prisma-client-js"
+  engineType    = "binary"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Document {
+  id           String   @id @default(cuid())
+  originalName String
+  mimeType     String
+  size         Int
+  storagePath  String
+  extractedText String
+  summary      String?
+  docType      String?
+  metadata     Json?
+  status       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
